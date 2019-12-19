@@ -273,9 +273,37 @@
               in the Servo_Ballet which uses the analog pattern function zo switch from 30 to 180 in
               20 ms. The error genrerates intemideate values: 30, 30, 240, 240, 240, 240, 180, 180, 180, 180,
               and also when switched back from 180 to 30: 180, 180, 180, 0, 0, 0, 0, 30, 30, 30,
+ 16.07.19:  => Released Ver. 0.8.0
  06.09.19:  - Added SINGLE_LEDxy
             - Added two new colors to Default_Room_Col_Tab
-24.09.19:   - Added binary signals
+ 24.09.19:  - Added binary signals
+ 02.10.19:  - New: Excel User interface to configure the LEDs without programming at all!
+            => Released Ver. 0.9.0
+ 05.10.19:  - Added +1 to the leds[] array because otherwise the House() function doesn't work with less than 3 single LEDs
+              if no other LED is following.
+                - GasLights(#LED, #InCh, GAS_LIGHT1, GAS_LIGHT1)                             => Onla the RED LED is turned on
+                + GasLights(#LED, #InCh, GAS_LIGHT1, GAS_LIGHT2)                             => O.K.
+                  // Reserve LEDs(1)
+                + GasLights(#LED, #InCh, GAS_LIGHT1, GAS_LIGHT2, GAS_LIGHT3, GAS_LIGHT1)     => O.K.
+                + GasLights(#LED, #InCh, SINGLE_LED1, SINGLE_LED2, SINGLE_LED3, SINGLE_LED1) => O.K.
+ 06.10.19:  => Released Ver. 0.9.1
+ 20.10.19:  - Corrected problems in the pattern function
+            - XPattern:
+              Added missing initialization in two for() loops which cause random errors in the XPattern mode
+              Problem was detected in the "KellerLicht()". Here the start value was wrong when the function
+              was turned on. It starts fading from a different color than expected ;-(
+            - HSV Mode:
+              Corrected the initialization of the HSV mode.
+              Problem was detected in the "Cave_Illumination()". Here the LEDs started with random color
+              at power on. The Cave_Illumination is not active at power on.
+ 24.10.19:  - Corrected XPattern function
+ 29.10.19:  - Corrected number of input chanels in the DepSignal4() and DepSignal4_RGB() macros. (Old 7: => 4)
+              This error created strange effects. In the example from Thomas the prior called Flash()
+              function stopped the fading in the XPattern() function. This was caused because the
+              InCh_to_TmpVar() macro used the temporary input channel by mistake ;-(
+ 30.10.19:  => Released Ver. 0.9.2
+ 08.12.19:  - Engagement of Pattern_Configurator and Program_Generator finished
+            => Released Ver. 0.9.3
 
 
  RAM Bedarf (NUM_LEDS 32 = 96):             http://jheyman.github.io/blog/pages/ArduinoTipsAndTricks/#figuring-out-where-memory-went
@@ -549,6 +577,7 @@ MobaLedLib_C::MobaLedLib_C(struct CRGB* _leds, uint16_t Num_Leds, const unsigned
   //  #endif
   //Dprintf("MobaLedLib_C Constructor\n");
 
+  //memset(_leds, 3, sizeof(CRGB)*Num_Leds); // Debug line to find initialization problems
   memset(TV_Dat, 0, sizeof(TV_Dat));
   memset(RAM,    0, RamSize);
 
