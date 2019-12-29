@@ -1,16 +1,20 @@
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 
-#define NUM_LEDS 20
-#define LED_PIN 2
+#define PIN       6
+#define NUMPIXELS 240
+#define DELAY 20
 
-CRGB led[NUM_LEDS];
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
-  // put your setup code here, to run once:
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(led, NUM_LEDS);
+  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  int sensorValue = analogRead(A0);
+  pixels.clear();
+  pixels.setPixelColor(sensorValue, pixels.Color(0, 150, 0));
+  pixels.show();
+  delay(DELAY);
 }
